@@ -1,14 +1,12 @@
 defmodule IzaWeb.Router do
   use IzaWeb, :router
 
-  alias IzaWeb.UserController
-
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
     plug :fetch_live_flash
     plug :put_root_layout, {IzaWeb.LayoutView, :root}
-    plug :protect_from_forgery
+    # plug :protect_from_forgery
     plug :put_secure_browser_headers
   end
 
@@ -20,6 +18,10 @@ defmodule IzaWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
+  end
+
+  scope "/api/v1", IzaWeb do
+    pipe_through :browser
 
     post("/create_user", UserController, :create_user)
   end
