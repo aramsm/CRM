@@ -4,11 +4,15 @@ defmodule IzaWeb.UserView do
   def render("user.json", %{user: user, address: address}) do
     %{
       status: :ok,
-      data: %{user: user, address: address}
+      data: %{
+        user: %{name: user.name, email: user.email, document: user.document},
+        address: %{street: address.street, city: address.city, state: address.state}
+      }
     }
   end
 
-  def render("error.json", %{operation: operation, error: %Ecto.Changeset{errors: errors}}) do
+  def render("error.json", %{operation: operation, error: %Ecto.Changeset{} = changeset}) do
+    errors = Ecto.Changeset.traverse_errors(changeset, &translate_error/1)
     render("error.json", %{operation: operation, error: errors})
   end
 
