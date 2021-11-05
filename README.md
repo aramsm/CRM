@@ -17,3 +17,21 @@ Ready to run in production? Please [check our deployment guides](https://hexdocs
   * Docs: https://hexdocs.pm/phoenix
   * Forum: https://elixirforum.com/c/phoenix-forum
   * Source: https://github.com/phoenixframework/phoenix
+
+## Endpoint
+
+  * http://localhost:4000/api/v1/create_user
+
+  ### Request example:
+  ```json
+  {
+    "name": "name",
+    "email": "email",
+    "document": "document",
+    "address": {
+        "street": "street",
+        "city": "city",
+        "state": "state"
+    }
+}
+  ```
