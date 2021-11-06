@@ -35,3 +35,12 @@ Ready to run in production? Please [check our deployment guides](https://hexdocs
     }
 }
   ```
+
+  * You can also send a `.csv` file
+
+  ### Request example:
+  ```
+  curl --location --request POST 'http://localhost:4000/api/v1/create_user' \
+  --header 'Content-Type: multipart/form-data' \
+  --form 'file=@"FILE_PATH.csv"'
+  ```
