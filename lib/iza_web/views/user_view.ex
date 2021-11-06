@@ -1,7 +1,17 @@
 defmodule IzaWeb.UserView do
   use IzaWeb, :view
 
-  def render("user.json", %{user: user, address: address}) do
+  def render("success.json", %{results: results}) when is_list(results) do
+    Enum.reduce(results, [], fn {status, result}, acc ->
+      [build_response(status, result)] ++ acc
+    end)
+  end
+
+  def render("success.json", %{results: results}), do: build_response(:ok, results)
+
+  def render("error.json", results), do: build_response(:error, results)
+
+  def build_response(:ok, %{user: user, address: address}) do
     %{
       status: :ok,
       data: %{
@@ -11,15 +21,15 @@ defmodule IzaWeb.UserView do
     }
   end
 
-  def render("error.json", %{operation: operation, error: %Ecto.Changeset{} = changeset}) do
+  def build_response(:error, %{operation: operation, error: %Ecto.Changeset{} = changeset}) do
     errors = Ecto.Changeset.traverse_errors(changeset, &translate_error/1)
-    render("error.json", %{operation: operation, error: errors})
+    build_response(:error, %{operation: operation, error: errors})
   end
 
-  def render("error.json", %{operation: operation, error: errors}) do
+  def build_response(:error, %{operation: operation, error: errors}) do
     %{
       status: :error,
-      data: %{operation: operation, error: errors}
+      data: %{entity: operation, error: errors}
     }
   end
 end
