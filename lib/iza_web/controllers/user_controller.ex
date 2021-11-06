@@ -1,26 +1,15 @@
 defmodule IzaWeb.UserController do
   use IzaWeb, :controller
 
-  alias Ecto.Multi
-  alias Iza.Users.Address
-  alias Iza.Users.User
+  alias Iza.Users
 
-  def create_user(conn, %{"address" => address} = params) do
-    user_params = Map.drop(params, ["address"])
-
-    Multi.new()
-    |> Multi.insert(:user, User.changeset(%User{}, user_params))
-    |> Multi.insert(:address, fn %{user: user} ->
-      address_params = Map.put(address, "user_id", user.id)
-
-      Address.changeset(%Address{}, address_params)
-    end)
-    |> Iza.Repo.transaction()
+  def create_user(conn, params) do
+    Users.create_user_with_address(params)
     |> case do
       {:ok, results} ->
         conn
         |> put_status(200)
-        |> render("user.json", results)
+        |> render("success.json", %{results: results})
 
       {:error, failed_operation, error, _} ->
         conn
